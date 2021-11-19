@@ -1,3 +1,4 @@
+import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')
@@ -12,6 +13,7 @@ export default class User {
     email: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column()
@@ -22,4 +24,13 @@ export default class User {
 
     @Column()
     updated_at: Date;
+
+    @Expose({ name: 'avatar_url' })
+    getAvatarUrl(): string | null | undefined {
+        if (!this.avatar) {
+            return null;
+        }
+
+        `${process.env.APP_API_URL}/files/${this.avatar}`;
+    }
 }

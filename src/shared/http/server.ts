@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
@@ -7,12 +8,14 @@ import routes from './routes';
 import AppError from '../errors/AppError';
 import '@shared/typeorm';
 import upload from '../../config/upload';
+import { pagination } from 'typeorm-pagination';
 
 const app = express();
 const port = process.env.PORT || 3333;
 
 app.use(cors());
 app.use(express.json());
+app.use(pagination);
 app.use('/files', express.static(upload.directory));
 app.use(routes);
 
