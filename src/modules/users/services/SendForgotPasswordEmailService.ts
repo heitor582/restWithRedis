@@ -5,7 +5,8 @@ import EtherealMail from '../../../config/mail/EtherealMail';
 import AppError from '../../../shared/errors/AppError';
 import { UserRepository } from '../typeorm/repositories/UsersRepository';
 import { UsersTokensRepository } from './../typeorm/repositories/UsersTokensRepository';
-
+import mailConfig from '../../../config/mail/mail';
+import SesMail from '../../../config/mail/SesMail';
 interface IRequest {
     email: string;
 }
@@ -29,19 +30,36 @@ export default class SendForgotPasswordEmailService {
             'forgot_password.hbs',
         );
 
-        await EtherealMail.sendMail({
-            to: {
-                name: user.name,
-                email: user.email,
-            },
-            subject: '[API Vendas] Recuperação de Senha',
-            templateData: {
-                file: forgotPasswordTemplate,
-                variables: {
+        if (mailConfig.driver === 'ses') {
+            await SesMail.sendMail({
+                to: {
                     name: user.name,
-                    link: `${process.env.APP_WEB_URL}/reset_password?token=${token}`,
+                    email: user.email,
                 },
-            },
-        });
+                subject: '[API Vendas] Recuperação de Senha',
+                templateData: {
+                    file: forgotPasswordTemplate,
+                    variables: {
+                        name: user.name,
+                        link: `${process.env.APP_WEB_URL}/reset_password?token=${token}`,
+                    },
+                },
+            });
+        } else {
+            await EtherealMail.sendMail({
+                to: {
+                    name: user.name,
+                    email: user.email,
+                },
+                subject: '[API Vendas] Recuperação de Senha',
+                templateData: {
+                    file: forgotPasswordTemplate,
+                    variables: {
+                        name: user.name,
+                        link: `${process.env.APP_WEB_URL}/reset_password?token=${token}`,
+                    },
+                },
+            });
+        }
     }
 }

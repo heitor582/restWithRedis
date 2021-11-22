@@ -1,5 +1,5 @@
 import { getCustomRepository } from 'typeorm';
-import RedisCache from '../../../shared/cache/RedisCache';
+import redisCache from '../../../shared/cache/RedisCache';
 
 import AppError from '../../../shared/errors/AppError';
 import { ProductRepository } from '../typeorm/repositories/ProductsRepository';
@@ -19,7 +19,6 @@ export default class DeleteProductService {
         }
 
         const redisKey = 'api-vendas-PRODUCT_LIST';
-        const redisCache = new RedisCache();
         await redisCache.invalidate(redisKey);
 
         await productsRepository.remove(product);
