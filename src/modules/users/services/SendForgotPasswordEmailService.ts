@@ -3,10 +3,10 @@ import { getCustomRepository } from 'typeorm';
 import EtherealMail from '../../../config/mail/EtherealMail';
 
 import AppError from '../../../shared/errors/AppError';
-import { UserRepository } from '../typeorm/repositories/UsersRepository';
-import { UsersTokensRepository } from './../typeorm/repositories/UsersTokensRepository';
 import mailConfig from '../../../config/mail/mail';
 import SesMail from '../../../config/mail/SesMail';
+import { UserRepository } from '../infra/typeorm/repositories/UsersRepository';
+import { UsersTokensRepository } from '../infra/typeorm/repositories/UsersTokensRepository';
 interface IRequest {
     email: string;
 }
